@@ -1,0 +1,4 @@
+[core]
+    remote = mydvcremote
+['remote "mydvcremote"']
+    url = C:\Users\Levovo_\Pictures\Complete-MLOPS-For-IMDB-Sentiment-Analysis\temp

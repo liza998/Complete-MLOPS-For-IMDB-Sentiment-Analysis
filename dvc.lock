@@ -1,0 +1,120 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/data_ingestion.py
+    deps:
+    - path: src/data_ingestion.py
+      hash: md5
+      md5: f28f78b39edec3fb6b35117f379c0727
+      size: 3500
+    params:
+      params.yaml:
+        data_ingestion.test_size: 0.2
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: 4d54b291ec2a99133ff75eae57282ecf.dir
+      size: 66332350
+      nfiles: 2
+  data_preprocessing:
+    cmd: python src/data_preprocessing.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 4d54b291ec2a99133ff75eae57282ecf.dir
+      size: 66332350
+      nfiles: 2
+    - path: src/data_preprocessing.py
+      hash: md5
+      md5: 746b047d1650dc5543a972fa179a6f07
+      size: 3302
+    outs:
+    - path: Process_Data/Processed
+      hash: md5
+      md5: 266b8200baa20c940ff223c64018a666.dir
+      size: 41669313
+      nfiles: 2
+  feature_engineering:
+    cmd: python src/feature_engineering.py
+    deps:
+    - path: Process_Data/Processed
+      hash: md5
+      md5: 266b8200baa20c940ff223c64018a666.dir
+      size: 41669313
+      nfiles: 2
+    - path: src/feature_engineering.py
+      hash: md5
+      md5: f0a8a7e1f0a11b5c499a774f46ae7c4c
+      size: 3872
+    params:
+      params.yaml:
+        feature_engineering.max_features: 5000
+    outs:
+    - path: Feature_Dataset_3/Feature
+      hash: md5
+      md5: 6eff90bf458014c60cc1167f71124b1b.dir
+      size: 1057538873
+      nfiles: 2
+  models_building:
+    cmd: python src/model_building.py
+    deps:
+    - path: Feature_Dataset_3/Feature
+      hash: md5
+      md5: 6eff90bf458014c60cc1167f71124b1b.dir
+      size: 1057538873
+      nfiles: 2
+    - path: src/model_building.py
+      hash: md5
+      md5: c5c1dc3048fb76178ee604f683f50f7c
+      size: 4734
+    params:
+      params.yaml:
+        model_building:
+          LogisticRegression:
+            max_iter: 1000
+          MultinomialNB:
+            alpha: 1.5
+          DecisionTreeClassifier:
+            max_depth: 4
+            class_weight: balanced
+          KNeighborsClassifier:
+            n_neighbors: 10
+          RandomForestClassifier:
+            n_estimators: 100
+            max_depth: 5
+          AdaBoostClassifier:
+            n_estimators: 10
+            learning_rate: 1.5
+          BaggingClassifier:
+            n_estimators: 10
+          ExtraTreesClassifier:
+            n_estimators: 100
+            max_depth: 5
+          GradientBoostingClassifier:
+            n_estimators: 100
+            learning_rate: 0.1
+            max_depth: 5
+    outs:
+    - path: models/
+      hash: md5
+      md5: ce8868c8e7f6d125776fc59bce258fc5.dir
+      size: 1590660334
+      nfiles: 6
+  models_evaluation:
+    cmd: python src/model_evaluation.py
+    deps:
+    - path: models/
+      hash: md5
+      md5: ce8868c8e7f6d125776fc59bce258fc5.dir
+      size: 1590660334
+      nfiles: 6
+    - path: src/model_evaluation.py
+      hash: md5
+      md5: 8f1241b3486d0c8bbaaa4f0339ecb025
+      size: 6061
+    outs:
+    - path: report/
+      hash: md5
+      md5: 7ef12ce1f5459f14251f9defabadf0e4.dir
+      size: 127
+      nfiles: 1
