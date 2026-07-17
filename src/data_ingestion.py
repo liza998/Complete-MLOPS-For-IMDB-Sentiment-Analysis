@@ -84,7 +84,7 @@ def main():
     try:
         params = load_params('params.yaml')
         test_size = params['data_ingestion']['test_size']
-        data_path = (r"C:\Users\Levovo_\Pictures\Complete-MLOPS-For-IMDB-Sentiment-Analysis\data\IMDB Dataset (1).csv")
+        data_path = "https://raw.githubusercontent.com/liza998/IMDB_Data/refs/heads/main/IMDB%20Dataset%20(1).csv"
         df = load_dataset(data_path)
         final_df = data_preprocessing(df)
         train_data, test_data = train_test_split(df,test_size=test_size,random_state=42)
