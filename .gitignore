@@ -13,7 +13,7 @@ dvclive/
 logs/
 
 
-data/IMDB Dataset (1).csv
+#data/IMDB Dataset (1).csv
 
 
 # Byte-compiled / optimized / DLL files
