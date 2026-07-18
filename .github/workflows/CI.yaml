@@ -27,7 +27,7 @@ jobs:
       
        - name: Run dvc pipeline
          env: 
-            IMDB_TOKEN:${{secrets.IMDB_TOKEN}} 
+           IMDB_TOKEN: ${{secrets.IMDB_TOKEN}} 
          run: | 
            dvc repro
           
