@@ -25,7 +25,8 @@ token = os.getenv("IMDB_TOKEN")
 os.environ["MLFLOW_TRACKING_USERNAME"] = token
 os.environ["MLFLOW_TRACKING_PASSWORD"] = token
 
-
+print("Token exists:", token is not None)
+print("Token length:", len(token) if token else 0)
 dagshub.init(repo_owner='lizarizwana65', repo_name='Complete-MLOPS-For-IMDB-Sentiment-Analysis', mlflow=True)
 mlflow.set_experiment("BestModel Hypertune_experiment")
 
