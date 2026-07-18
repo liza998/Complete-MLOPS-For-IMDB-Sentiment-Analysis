@@ -22,8 +22,10 @@ import os
 import dagshub
 
 token = os.getenv("IMDB_TOKEN")
-os.environ["MLFLOW_TRACKING_USERNAME"] = token
+os.environ["MLFLOW_TRACKING_USERNAME"] = "lizarizwana65"
 os.environ["MLFLOW_TRACKING_PASSWORD"] = token
+
+
 
 print("Token exists:", token is not None)
 print("Token length:", len(token) if token else 0)
