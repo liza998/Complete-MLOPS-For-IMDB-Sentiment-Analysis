@@ -5,3 +5,11 @@ import mlflow
 with mlflow.start_run():
   mlflow.log_param('parameter name', 'value')
   mlflow.log_metric('metric name', 1)
+
+token = os.getenv("DAGSHUB_TOKEN")
+os.environ["MLFLOW_TRACKING_USERNAME"] = token
+os.environ["MLFLOW_TRACKING_PASSWORD"] = token
+
+dagshub_url= "https://dagshub.com"
+repo_owner = "lizarizwana65"
+repo_name = "Complete-MLOPS-For-IMDB-Sentiment-Analysis"

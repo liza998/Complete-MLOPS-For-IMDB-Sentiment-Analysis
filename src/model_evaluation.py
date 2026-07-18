@@ -140,8 +140,8 @@ def main():
         test_data = load_dataset('./Feature_Dataset_3/Feature/test_tfidf.csv')
         X_test = test_data.iloc[:,:-1].values
         y_test = test_data.iloc[:,-1].values
+        metrics_dict,Confusion_matrix,Classification_report = model_evaluation(model,X_test,y_test)
         with mlflow.start_run():
-            metrics_dict,Confusion_matrix,Classification_report = model_evaluation(model,X_test,y_test)
             mlflow.log_params(params['model_building']['AdaBoostClassifier'])
             for name, metrics in metrics_dict.items():
                 mlflow.log_metric(name, metrics)
