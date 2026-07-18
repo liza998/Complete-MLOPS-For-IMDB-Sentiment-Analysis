@@ -12,6 +12,7 @@ import pickle
 import json 
 from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score,confusion_matrix,classification_report
 import re
+from pathlib import Path
 import pickle
 import dagshub
 import dvclive 
@@ -86,8 +87,9 @@ def load_model(data_url : str) -> pd.DataFrame:
         raise
 
 
-def model_evaluation(model, X_test: np.ndarray, y_test: np.ndarray):
+def model_evaluation(model, X_test: np.ndarray, y_test: np.ndarray,model_path):
     try:
+        model_name = model_path.parent.name
         y_pred = model.predict(X_test)
         y_pred_prob = model.predict_proba(X_test)[:,1]
         accuracy = accuracy_score(y_test,y_pred)
@@ -96,7 +98,9 @@ def model_evaluation(model, X_test: np.ndarray, y_test: np.ndarray):
         f1score = f1_score(y_test,y_pred)
         Confusion_matrix = confusion_matrix(y_test,y_pred)
         Classification_report =classification_report(y_test,y_pred)
-        metrics_dict ={
+        if accuracy >= 0.80:
+            metrics_dict ={
+            "Model": model_name,
             "accuracy": accuracy,
             "precision": precision,
             "recall" : recall,
@@ -140,11 +144,18 @@ def main():
         test_data = load_dataset('./Feature_Dataset_3/Feature/test_tfidf.csv')
         X_test = test_data.iloc[:,:-1].values
         y_test = test_data.iloc[:,-1].values
-        metrics_dict,Confusion_matrix,Classification_report = model_evaluation(model,X_test,y_test)
+        for model_path in Path("./models").rglob("*.pkl"):
+            model = load_model(model_path)
+        metrics_dict,Confusion_matrix,Classification_report = model_evaluation(model,X_test,y_test,model_path)
+        os.makedirs("report", exist_ok=True)
+        savemetrics(metrics_dict,"./report/BestModel.json")
+        model_name = metrics_dict["Model"]
         with mlflow.start_run():
-            mlflow.log_params(params['model_building']['AdaBoostClassifier'])
+            mlflow.log_param("Model", model_name)
+            mlflow.log_params(params["model_building"][model_name])
             for name, metrics in metrics_dict.items():
-                mlflow.log_metric(name, metrics)
+                if  name != 'Model':
+                    mlflow.log_metric(name, metrics)
             cm = Confusion_matrix
             plt.figure(figsize=(10,12))
             sns.heatmap(cm, annot=True, cmap='Blues')
@@ -160,8 +171,7 @@ def main():
             mlflow.log_artifact("classification_report.txt")
             print("Confusion matrix is Created")
             mlflow.log_artifact(__file__)
-        os.makedirs("report", exist_ok=True)
-        savemetrics(metrics_dict,"./report/AdaBoostClassifier.json")
+        
         with Live(save_dvc_exp=True) as live:
             for name,metrics in metrics_dict.items():
                 live.log_metric(name,metrics)
