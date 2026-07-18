@@ -98,8 +98,7 @@ def model_evaluation(model, X_test: np.ndarray, y_test: np.ndarray,model_path):
         f1score = f1_score(y_test,y_pred)
         Confusion_matrix = confusion_matrix(y_test,y_pred)
         Classification_report =classification_report(y_test,y_pred)
-        if accuracy >= 0.80:
-            metrics_dict ={
+        metrics_dict ={
             "Model": model_name,
             "accuracy": accuracy,
             "precision": precision,
@@ -107,8 +106,8 @@ def model_evaluation(model, X_test: np.ndarray, y_test: np.ndarray,model_path):
             "f1_score": f1score,
 
         }
-            logger.debug("All metrics are loaded successfully")
-            return metrics_dict,Confusion_matrix,Classification_report
+        logger.debug("All metrics are loaded successfully")
+        return metrics_dict,Confusion_matrix,Classification_report
         
      
         
@@ -140,19 +139,22 @@ def main():
     try:
         #train_models = {}
         params = load_params('params.yaml')
-        model = load_model("./models/AdaBoostClassifier/AdaBoostClassifier.pkl")
         test_data = load_dataset('./Feature_Dataset_3/Feature/test_tfidf.csv')
         X_test = test_data.iloc[:,:-1].values
         y_test = test_data.iloc[:,-1].values
         for model_path in Path("./models").rglob("*.pkl"):
             model = load_model(model_path)
-        metrics_dict,Confusion_matrix,Classification_report = model_evaluation(model,X_test,y_test,model_path)
-        os.makedirs("report", exist_ok=True)
-        savemetrics(metrics_dict,"./report/BestModel.json")
-        model_name = metrics_dict["Model"]
-        with mlflow.start_run():
-            mlflow.log_param("Model", model_name)
-            mlflow.log_params(params["model_building"][model_name])
+            metrics_dict,Confusion_matrix,Classification_report = model_evaluation(model,X_test,y_test,model_path)
+            # Skip models with accuracy < 0.80
+            if metrics_dict["accuracy"] < 0.80:
+                logger.info(f"Skipping {metrics_dict['Model']} because accuracy is {metrics_dict['accuracy']:.4f}")
+                continue
+            os.makedirs("report", exist_ok=True)
+            savemetrics(metrics_dict,"./report/BestModel.json")
+            model_name = metrics_dict["Model"]
+            with mlflow.start_run():
+                mlflow.log_param("Model", model_name)
+                mlflow.log_params(params["model_building"][model_name])
             for name, metrics in metrics_dict.items():
                 if  name != 'Model':
                     mlflow.log_metric(name, metrics)
@@ -172,10 +174,10 @@ def main():
             print("Confusion matrix is Created")
             mlflow.log_artifact(__file__)
         
-        with Live(save_dvc_exp=True) as live:
-            for name,metrics in metrics_dict.items():
-                live.log_metric(name,metrics)
-            live.log_params(params["model_building"]["AdaBoostClassifier"])
+            with Live(save_dvc_exp=True) as live:
+                for name,metrics in metrics_dict.items():
+                    live.log_metric(name,metrics)
+                    live.log_params(params["model_building"][model_name])
 
             
             
