@@ -3,7 +3,7 @@ data/raw/
 Process_Data/
 Feature_Dataset_3/
 models/
-report/
+#report/
 
 # DVC cache
 .dvc/cache/
