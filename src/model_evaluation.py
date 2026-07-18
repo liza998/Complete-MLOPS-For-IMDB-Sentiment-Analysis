@@ -20,7 +20,17 @@ from  dvclive import Live
 import os 
 
 import dagshub
-dagshub.init(repo_owner='lizarizwana65', repo_name='Complete-MLOPS-For-IMDB-Sentiment-Analysis', mlflow=True)
+#dagshub.init(repo_owner='lizarizwana65', repo_name='Complete-MLOPS-For-IMDB-Sentiment-Analysis', mlflow=True)
+
+token = os.getenv("IMDB_TOKEN")
+os.environ["MLFLOW_TRACKING_USERNAME"] = token
+os.environ["MLFLOW_TRACKING_PASSWORD"] = token
+
+dagshub_url= "https://dagshub.com"
+repo_owner = "lizarizwana65"
+repo_name = "Complete-MLOPS-For-IMDB-Sentiment-Analysis"
+dagshub.init(f"{dagshub_url}/{repo_owner}/{repo_name}.mlflow")
+
 mlflow.set_experiment("BestModel Hypertune_experiment")
 
 log_dir = 'logs'

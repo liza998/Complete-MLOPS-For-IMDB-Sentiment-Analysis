@@ -26,8 +26,8 @@ jobs:
         
       
        - name: Run dvc pipeline
-         #env: 
-            #DAGSHUB_TOKEN:${{secrects.DAGSHUB_TOKEN}} 
+         env: 
+            IMDB_TOKEN:${{secrects.IMDB_TOKEN}} 
          run: | 
            dvc repro
           
