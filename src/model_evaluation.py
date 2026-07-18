@@ -107,10 +107,10 @@ def model_evaluation(model, X_test: np.ndarray, y_test: np.ndarray,model_path):
             "f1_score": f1score,
 
         }
+            logger.debug("All metrics are loaded successfully")
+            return metrics_dict,Confusion_matrix,Classification_report
         
-        logger.debug("All metrics are loaded successfully")
-        return metrics_dict,Confusion_matrix,Classification_report
-
+     
         
     except ValueError as e:
         logger.error('ValueError during model evaluation: %s', e)
