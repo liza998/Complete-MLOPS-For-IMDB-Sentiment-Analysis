@@ -153,13 +153,13 @@ def main():
             savemetrics(metrics_dict,"./report/BestModel.json")
             model_name = metrics_dict["Model"]
         with mlflow.start_run():
-                
+            mlflow.log_param("Model", model_name)
+            mlflow.log_params(params["model_building"][model_name])
             for name, metrics in metrics_dict.items():
                 if  name != 'Model':
                     mlflow.log_metric(name, metrics)
-                else:
-                    mlflow.log_param("Model", name)
-                    mlflow.log_params(params["model_building"][name])
+                
+                    
 
             cm = Confusion_matrix
             plt.figure(figsize=(10,12))
