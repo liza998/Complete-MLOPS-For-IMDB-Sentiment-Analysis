@@ -21,7 +21,7 @@ import os
 
 import dagshub
 
-token = os.getenv("IMDB_TOKEN")
+token = os.getenv("DAGSHUB_USER_TOKEN")
 os.environ["MLFLOW_TRACKING_USERNAME"] = "lizarizwana65"
 os.environ["MLFLOW_TRACKING_PASSWORD"] = token
 
