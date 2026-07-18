@@ -21,7 +21,7 @@ import os
 
 import dagshub
 dagshub.init(repo_owner='lizarizwana65', repo_name='Complete-MLOPS-For-IMDB-Sentiment-Analysis', mlflow=True)
-mlflow.set_experiment("AdaBoostClassifier Hypertune_experiment")
+mlflow.set_experiment("BestModel Hypertune_experiment")
 
 log_dir = 'logs'
 os.makedirs(log_dir,exist_ok=True)
