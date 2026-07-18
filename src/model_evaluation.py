@@ -155,17 +155,14 @@ def main():
         
         
         
-            with mlflow.start_run():
+            with mlflow.start_run(run_name=model_name):
                 mlflow.log_param("Model", model_name)
                 mlflow.log_params(params["model_building"][model_name])
                 for name, metrics in metrics_dict.items():
                  if  name != 'Model':
                    mlflow.log_metric(name, metrics)
-                
-                    
-
-                 cm = Confusion_matrix
-                 plt.figure(figsize=(10,12))
+                cm = Confusion_matrix
+                plt.figure(figsize=(10,12))
                 sns.heatmap(cm, annot=True, cmap='Blues')
                 plt.ylabel("Actual")
                 plt.xlabel("Predict")
@@ -179,6 +176,11 @@ def main():
                 mlflow.log_artifact("classification_report.txt")
                 print("Confusion matrix is Created")
                 mlflow.log_artifact(__file__)
+                mlflow.sklearn.log_model(
+                   sk_model= model,
+                   artifact_path="model",
+                   registered_model_name= model_name
+                ) 
         
             with Live(save_dvc_exp=True) as live:
                 for name,metrics in metrics_dict.items():
