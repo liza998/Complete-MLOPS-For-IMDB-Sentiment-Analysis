@@ -1,0 +1,36 @@
+# Virtual environments
+venv/
+venvv/
+.venv/
+
+# Git
+.git/
+.github/
+
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# DVC cache
+.dvc/cache/
+
+# MLflow
+mlruns/
+
+# Logs
+logs/
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Large datasets
+data/raw/
+Process_Data/
+Feature_Dataset_3/
+report/
+
+
+# Temporary
+temp/
