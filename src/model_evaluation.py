@@ -152,30 +152,33 @@ def main():
             os.makedirs("report", exist_ok=True)
             savemetrics(metrics_dict,"./report/BestModel.json")
             model_name = metrics_dict["Model"]
-        with mlflow.start_run():
-            mlflow.log_param("Model", model_name)
-            mlflow.log_params(params["model_building"][model_name])
-            for name, metrics in metrics_dict.items():
-                if  name != 'Model':
-                    mlflow.log_metric(name, metrics)
+        
+        
+        
+            with mlflow.start_run():
+                mlflow.log_param("Model", model_name)
+                mlflow.log_params(params["model_building"][model_name])
+                for name, metrics in metrics_dict.items():
+                 if  name != 'Model':
+                   mlflow.log_metric(name, metrics)
                 
                     
 
-            cm = Confusion_matrix
-            plt.figure(figsize=(10,12))
-            sns.heatmap(cm, annot=True, cmap='Blues')
-            plt.ylabel("Actual")
-            plt.xlabel("Predict")
-            plt.title("Confusion Matrix")
-            print("confusion Matrix is created") 
-            plt.savefig("confusion_matrix.png")
-            print("saved into pngformat")
-            mlflow.log_artifact("confusion_matrix.png")
-            with open("classification_report.txt","w") as file:
-                file.write(Classification_report)
-            mlflow.log_artifact("classification_report.txt")
-            print("Confusion matrix is Created")
-            mlflow.log_artifact(__file__)
+                 cm = Confusion_matrix
+                 plt.figure(figsize=(10,12))
+                sns.heatmap(cm, annot=True, cmap='Blues')
+                plt.ylabel("Actual")
+                plt.xlabel("Predict")
+                plt.title("Confusion Matrix")
+                print("confusion Matrix is created") 
+                plt.savefig("confusion_matrix.png")
+                print("saved into pngformat")
+                mlflow.log_artifact("confusion_matrix.png")
+                with open("classification_report.txt","w") as file:
+                   file.write(Classification_report)
+                mlflow.log_artifact("classification_report.txt")
+                print("Confusion matrix is Created")
+                mlflow.log_artifact(__file__)
         
             with Live(save_dvc_exp=True) as live:
                 for name,metrics in metrics_dict.items():
