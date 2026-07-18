@@ -2,6 +2,8 @@ import pandas as pd
 import os 
 import logging
 import yaml
+import pickle 
+import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
 import re
 
@@ -74,7 +76,7 @@ def applytfidfVectorize(train_data : pd.DataFrame, test_data: pd.DataFrame,  max
         test_df["Label"] = y_test
 
         logger.debug("Successfully Created Features Dataset Using TfIdfVectrizer")
-        return train_df,test_df
+        return train_df,test_df,vector
     
     except Exception as e:
         logger.error('Error during Bag of Words transformation: %s', e)
@@ -92,7 +94,18 @@ def save_data(df: pd.DataFrame, filepath: str) -> None:
         raise
 
 
-
+def save_vectorizer(vector, file_path: str)-> None:
+    try:
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path,"wb") as file:
+            pickle.dump(vector ,file)
+            logger.debug("vector is Successfully Stored")
+    except FileNotFoundError as e:
+        logger.error('File path not found: %s', e)
+        raise
+    except Exception as e:
+        logger.error('Error occurred while saving the model: %s', e)
+        raise
 
 
 
@@ -102,7 +115,11 @@ def main():
         max_features = params['feature_engineering']['max_features']
         train_data = load_dataset('./Process_Data/Processed/train_processed_data.csv')
         test_data = load_dataset('./Process_Data/Processed/test_processed_data.csv')
-        feature_train_data,feature_test_data = applytfidfVectorize(train_data,test_data,max_features=max_features)
+        feature_train_data,feature_test_data,vector = applytfidfVectorize(train_data,test_data,max_features=max_features)
+        dir = "Vector"
+        os.makedirs(dir, exist_ok=True)
+        save_vectorizer(vector,os.path.join('./Vector/tfidf.pkl'))
+
         # Save Data
         dir = "Feature_Dataset_3"
         os.makedirs(dir, exist_ok=True)

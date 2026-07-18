@@ -1,0 +1,29 @@
+!<!DOCTYPE html>
+<html lang="en">
+<head>
+   
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+        <title>IMDB Sentiment Analysis</title>
+    
+</head>
+<body>
+    <div class="container">
+        <h1>IMDB Movie Review Analysis</h1>
+        <form action="/upload" method="POST" id="sentiment-form">
+            <label for="input-text">Movie Review </label>
+            <textarea name="text" id="input-text" placeholder="Enter your Review Here(Must be in English)">
+            </textarea>
+
+            <button type="submit">Submit</button>
+
+            <label for="output-text">Your Given Movie Review is: {{prediction}}</label>
+            <input type="text" id="output-text", placeholder="Sentiment of your given Review is appearing here">
+
+        </form>
+    </div>
+    <script src="{{url_for('static', filename='scripts.js')}}"></script>
+    
+</body>
+</html>
