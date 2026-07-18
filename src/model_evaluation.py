@@ -158,8 +158,8 @@ def main():
                 if  name != 'Model':
                     mlflow.log_metric(name, metrics)
                 else:
-                    mlflow.log_param("Model", model_name)
-                    mlflow.log_params(params["model_building"][model_name])
+                    mlflow.log_param("Model", name)
+                    mlflow.log_params(params["model_building"][name])
 
             cm = Confusion_matrix
             plt.figure(figsize=(10,12))
